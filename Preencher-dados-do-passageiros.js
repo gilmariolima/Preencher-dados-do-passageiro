@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Preencher-dados-do-passageiro
+// @name         preencher dados dos passageiros
 // @namespace    http://tampermonkey.net/
 // @version      2.0
 // @description  Painel de notas fixo + botão copiar passageiros
@@ -305,6 +305,8 @@
     if (iTel  < 0) iTel  = 4;
 
     const lines = [];
+    const nomesVistos = new Set();
+
     rows.forEach(row => {
       const cells = row.querySelectorAll('td');
       if (!cells.length) return;
@@ -314,10 +316,14 @@
       const nome = get(iNome).replace(/^#\d+\s*/, '');
       const doc  = get(iDoc).replace(/^(CPF|RG)\s*[-–]\s*/i, '').trim();
       const tel  = get(iTel);
-      // Coluna TIPO — índice 3 fixo (entre DOCUMENTO e TELEFONE)
       const tipo = cells[3] ? cells[3].innerText.trim() : 'NORMAL';
 
       if (!nome) return;
+
+      // Ignora duplicatas pelo nome
+      if (nomesVistos.has(nome.toLowerCase())) return;
+      nomesVistos.add(nome.toLowerCase());
+
       lines.push(`${nome}\n${doc}\n${tel}\n${tipo}`);
     });
 
