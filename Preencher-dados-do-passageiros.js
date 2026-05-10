@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         preencher dados dos passageiros
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  Painel de notas fixo + botão copiar passageiros
 // @author       Você
 // @match        https://prod-guanabara-frontoffice-smartbus.smarttravelit.com/*
@@ -22,11 +22,11 @@
       top: 16px;
       right: 16px;
       z-index: 999999;
-      width: 240px;
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      width: 260px;
+      background: #ffffff;
+      border: 1px solid #d8dee8;
+      border-radius: 14px;
+      box-shadow: 0 10px 32px rgba(15, 23, 42, 0.22);
       overflow: hidden;
       font-family: 'DM Mono', monospace;
     }
@@ -35,9 +35,9 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px;
-      background: #161616;
-      border-bottom: 1px solid #222;
+      padding: 9px 12px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e5e7eb;
       cursor: default;
       user-select: none;
     }
@@ -45,44 +45,60 @@
     #tm-panel-label {
       font-size: 10px;
       letter-spacing: 0.1em;
-      color: #444;
+      color: #475569;
       text-transform: uppercase;
+      font-weight: 700;
     }
 
     #tm-btn-min {
-      background: none;
-      border: none;
-      color: #444;
+      background: #eef2f7;
+      border: 1px solid #d8dee8;
+      color: #334155;
       cursor: pointer;
       font-size: 14px;
       line-height: 1;
-      padding: 0;
-      transition: color 0.15s;
+      padding: 2px 7px;
+      border-radius: 7px;
+      transition: all 0.15s;
     }
-    #tm-btn-min:hover { color: #aaa; }
+
+    #tm-btn-min:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
 
     #tm-panel-body {
       padding: 10px;
+      background: #ffffff;
     }
 
+    /* ── TEXTAREA BRANCO ── */
     #tm-textarea {
       width: 100%;
-      height: 120px;
+      height: 130px;
       resize: none;
-      background: #0a0a0a;
-      border: 1px solid #1e1e1e;
-      border-radius: 8px;
-      color: #ddd;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      color: #0f172a;
       font-family: 'DM Mono', monospace;
       font-size: 12px;
       line-height: 1.6;
       padding: 10px;
       box-sizing: border-box;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
     }
-    #tm-textarea:focus { border-color: #383838; }
-    #tm-textarea::placeholder { color: #2e2e2e; }
+
+    #tm-textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    #tm-textarea::placeholder {
+      color: #94a3b8;
+    }
 
     /* ── Botão copiar passageiros ── */
     #tm-copy-btn {
@@ -91,7 +107,7 @@
       gap: 6px;
       margin-left: 12px;
       padding: 4px 12px;
-      background: #2a7a2a;
+      background: #16a34a;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -101,8 +117,14 @@
       vertical-align: middle;
       transition: background 0.2s;
     }
-    #tm-copy-btn:hover { background: #218a21; }
-    #tm-copy-btn.copied { background: #555; }
+
+    #tm-copy-btn:hover {
+      background: #15803d;
+    }
+
+    #tm-copy-btn.copied {
+      background: #475569;
+    }
 
     /* ── Toast ── */
     #tm-toast {
@@ -110,8 +132,8 @@
       bottom: 24px;
       right: 24px;
       z-index: 1000000;
-      background: #222;
-      color: #ccc;
+      background: #0f172a;
+      color: #ffffff;
       font-size: 13px;
       padding: 10px 18px;
       border-radius: 8px;
@@ -120,35 +142,53 @@
       transition: all 0.2s ease;
       pointer-events: none;
       font-family: sans-serif;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
     }
-    #tm-toast.show { opacity: 1; transform: translateY(0); }
+
+    #tm-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     /* ── Botão confirmar no painel ── */
     #tm-btn-confirm {
       width: 100%;
       margin-top: 8px;
-      padding: 7px 0;
-      background: #1a5ca8;
+      padding: 8px 0;
+      background: #2563eb;
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-family: 'DM Mono', monospace;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.1s;
     }
-    #tm-btn-confirm:hover { background: #1a6fd4; }
-    #tm-btn-confirm:disabled { background: #1e1e1e; color: #444; cursor: default; }
+
+    #tm-btn-confirm:hover {
+      background: #1d4ed8;
+    }
+
+    #tm-btn-confirm:active {
+      transform: scale(0.98);
+    }
+
+    #tm-btn-confirm:disabled {
+      background: #cbd5e1;
+      color: #64748b;
+      cursor: default;
+    }
   `;
   document.head.appendChild(style);
 
-  // ─── Toast (sempre presente) ──────────────────────────────────────────────
+  // ─── Toast ────────────────────────────────────────────────────────────────
   document.body.insertAdjacentHTML('beforeend', `<div id="tm-toast"></div>`);
 
-  // ─── Painel de notas (só quando .step-legend contém "passageiros") ─────────
+  // ─── Painel de notas ──────────────────────────────────────────────────────
   function isPaginaPassageiros() {
     const legends = document.querySelectorAll('.step-legend');
+
     return Array.from(legends).some(el =>
       el.innerText.trim().toLowerCase().includes('passageiros')
     );
@@ -164,6 +204,7 @@
           <span id="tm-panel-label">notas</span>
           <button id="tm-btn-min" title="Minimizar">−</button>
         </div>
+
         <div id="tm-panel-body">
           <textarea id="tm-textarea" placeholder="Cole os passageiros aqui…" spellcheck="false"></textarea>
           <button id="tm-btn-confirm">⏎ Preencher campos</button>
@@ -172,6 +213,7 @@
     `);
 
     let minimized = false;
+
     document.getElementById('tm-btn-min').addEventListener('click', () => {
       minimized = !minimized;
       document.getElementById('tm-panel-body').style.display = minimized ? 'none' : '';
@@ -181,67 +223,92 @@
 
   function removePanel() {
     const panel = document.getElementById('tm-panel');
+
     if (panel) panel.remove();
   }
 
-  // ─── Toast ────────────────────────────────────────────────────────────────
   function showToast(msg) {
     const t = document.getElementById('tm-toast');
+
     t.textContent = msg;
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
+
+    setTimeout(() => {
+      t.classList.remove('show');
+    }, 2500);
   }
 
-  // ─── Preencher campos com passageiros ────────────────────────────────────
   function setNativeValue(input, value) {
-    // Dispara eventos que o Angular/Vue detecta
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype,
+      'value'
+    ).set;
+
     nativeInputValueSetter.call(input, value);
+
     input.dispatchEvent(new Event('input', { bubbles: true }));
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   function fillPassengers() {
     const raw = document.getElementById('tm-textarea').value.trim();
-    if (!raw) { showToast('⚠ Textarea vazia.'); return; }
 
-    // Formato: Nome \n Documento \n Telefone \n Tipo
-    const blocks = raw.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+    if (!raw) {
+      showToast('⚠ Textarea vazia.');
+      return;
+    }
 
-    // Cada .card é um passageiro — busca o tipo pelo <b class="orange"> dentro do título
+    const blocks = raw
+      .split(/\n\s*\n/)
+      .map(b => b.trim())
+      .filter(Boolean);
+
     const cards = Array.from(document.querySelectorAll('.card')).filter(card =>
       card.querySelector('.sales-passenger-title')
     );
-    if (!cards.length) { showToast('⚠ Nenhum formulário encontrado.'); return; }
 
-    // Agrupa os cards por tipo para preencher na ordem correta
+    if (!cards.length) {
+      showToast('⚠ Nenhum formulário encontrado.');
+      return;
+    }
+
     const cardsPorTipo = {};
+
     cards.forEach(card => {
       const b = card.querySelector('.sales-passenger-title b.orange');
+
       if (!b) return;
-      const tipo = b.innerText.trim().replace(/^#\d+\s*/, '').toUpperCase().trim();
+
+      const tipo = b.innerText
+        .trim()
+        .replace(/^#\d+\s*/, '')
+        .toUpperCase()
+        .trim();
+
       if (!cardsPorTipo[tipo]) cardsPorTipo[tipo] = [];
+
       cardsPorTipo[tipo].push(card);
     });
 
-    // Controla quantos de cada tipo já foram preenchidos
     const tipoUsado = {};
     let filled = 0;
     let skipped = 0;
 
     blocks.forEach((block) => {
       const lines = block.split('\n').map(l => l.trim());
+
       const nome = lines[0] || '';
-      const doc  = lines[1] || '';
-      const tel  = lines[2] || '';
+      const doc = lines[1] || '';
+      const tel = lines[2] || '';
       const tipo = (lines[3] || 'NORMAL').toUpperCase().trim();
 
       tipoUsado[tipo] = tipoUsado[tipo] || 0;
+
       const available = cardsPorTipo[tipo] || [];
       const card = available[tipoUsado[tipo]];
 
       if (!card) {
-        console.log(`[TM] Sem card disponível para tipo "${tipo}" (ocorrência ${tipoUsado[tipo] + 1})`);
+        console.log(`[TM] Sem card disponível para tipo "${tipo}"`);
         skipped++;
         tipoUsado[tipo]++;
         return;
@@ -249,79 +316,90 @@
 
       tipoUsado[tipo]++;
 
-      // Pega inputs relativos a este card — cada tipo pode ter quantidade diferente
       const info = card.querySelector('.sales-passenger-info');
+
       if (!info) return;
+
       const inputs = info.querySelectorAll('input');
 
-      // Mapeia campos pelo label do pai (busca o texto da label mais próxima)
-      function findInputByLabel(keyword) {
-        return Array.from(inputs).find(inp => {
-          const label = inp.closest('[class]')?.previousElementSibling?.innerText?.toLowerCase() || '';
-          const wrapper = inp.closest('.form-group, .input-group, div')?.innerText?.toLowerCase() || '';
-          return label.includes(keyword) || wrapper.includes(keyword);
-        });
+      if (inputs[1]) {
+        setNativeValue(inputs[1], nome);
+        filled++;
       }
 
-      // Índices relativos ao .sales-passenger-info (confirmados pelo usuário):
-      // [1]=Nome [2]=Telefone [4]=Data nascimento [5]=RG
-      // Para tipos com menos campos (ex: GRATUIDADE CRIANÇA sem CPF) os índices
-      // ainda são os mesmos dentro do próprio card — sem contaminação entre cards
-      if (inputs[1]) { setNativeValue(inputs[1], nome);         filled++; }
-      if (inputs[2]) { setNativeValue(inputs[2], tel);                    }
-      if (inputs[4]) { setNativeValue(inputs[4], '01/05/2026');           }
-      if (inputs[5]) { setNativeValue(inputs[5], doc);                    }
+      if (inputs[2]) {
+        setNativeValue(inputs[2], tel);
+      }
+
+      if (inputs[4]) {
+        setNativeValue(inputs[4], '01/05/2026');
+      }
+
+      if (inputs[5]) {
+        setNativeValue(inputs[5], doc);
+      }
     });
 
     const msg = skipped > 0
       ? `✓ ${filled} preenchido(s), ${skipped} ignorado(s) sem campo.`
       : `✓ ${filled} passageiro(s) preenchido(s)!`;
+
     showToast(msg);
   }
 
-  // Listener do botão confirmar (delegado pois o painel pode ser reinjetado)
   document.addEventListener('click', (e) => {
-    if (e.target && e.target.id === 'tm-btn-confirm') fillPassengers();
+    if (e.target && e.target.id === 'tm-btn-confirm') {
+      fillPassengers();
+    }
   });
 
   // ─── Botão copiar passageiros ─────────────────────────────────────────────
   function getPassengerText(table) {
     const rows = table.querySelectorAll('tbody tr');
+
     if (!rows.length) return null;
 
     const ths = Array.from(table.querySelectorAll('thead th'));
-    let iNome = -1, iDoc = -1, iTel = -1;
+
+    let iNome = -1;
+    let iDoc = -1;
+    let iTel = -1;
 
     ths.forEach((th, i) => {
       const txt = th.innerText.trim().toLowerCase();
-      if (txt.includes('passageiro'))                             iNome = i;
-      else if (txt.includes('documento') || txt.includes('doc')) iDoc  = i;
-      else if (txt.includes('telefone') || txt.includes('tel'))  iTel  = i;
+
+      if (txt.includes('passageiro')) {
+        iNome = i;
+      } else if (txt.includes('documento') || txt.includes('doc')) {
+        iDoc = i;
+      } else if (txt.includes('telefone') || txt.includes('tel')) {
+        iTel = i;
+      }
     });
 
-    // Fallback: [0]# [1]PASSAGEIRO [2]DOCUMENTO [3]TIPO [4]TELEFONE
     if (iNome < 0) iNome = 1;
-    if (iDoc  < 0) iDoc  = 2;
-    if (iTel  < 0) iTel  = 4;
+    if (iDoc < 0) iDoc = 2;
+    if (iTel < 0) iTel = 4;
 
     const lines = [];
     const nomesVistos = new Set();
 
     rows.forEach(row => {
       const cells = row.querySelectorAll('td');
+
       if (!cells.length) return;
 
-      const get = (idx) => (cells[idx] ? cells[idx].innerText.trim() : '');
+      const get = (idx) => cells[idx] ? cells[idx].innerText.trim() : '';
 
       const nome = get(iNome).replace(/^#\d+\s*/, '');
-      const doc  = get(iDoc).replace(/^(CPF|RG)\s*[-–]\s*/i, '').trim();
-      const tel  = get(iTel);
+      const doc = get(iDoc).replace(/^[A-Za-zÀ-ÿ\s]+[-–]\s*/i, '').trim();
+      const tel = get(iTel);
       const tipo = cells[3] ? cells[3].innerText.trim() : 'NORMAL';
 
       if (!nome) return;
 
-      // Ignora duplicatas pelo nome
       if (nomesVistos.has(nome.toLowerCase())) return;
+
       nomesVistos.add(nome.toLowerCase());
 
       lines.push(`${nome}\n${doc}\n${tel}\n${tipo}`);
@@ -334,54 +412,74 @@
     if (document.getElementById('tm-copy-btn')) return;
 
     const th = table.querySelector('thead tr th');
+
     if (!th) return;
 
     const btn = document.createElement('button');
+
     btn.id = 'tm-copy-btn';
     btn.innerHTML = '&#128203; Copiar';
+
     th.appendChild(btn);
 
     btn.addEventListener('click', () => {
       const text = getPassengerText(table);
-      if (!text) { showToast('⚠ Nenhum passageiro encontrado.'); return; }
+
+      if (!text) {
+        showToast('⚠ Nenhum passageiro encontrado.');
+        return;
+      }
 
       navigator.clipboard.writeText(text).then(() => {
         btn.classList.add('copied');
         btn.innerHTML = '✓ Copiado';
         showToast('✓ Passageiros copiados!');
+
         setTimeout(() => {
           btn.classList.remove('copied');
           btn.innerHTML = '&#128203; Copiar';
         }, 2000);
       }).catch(() => {
         const ta = document.createElement('textarea');
+
         ta.value = text;
         ta.style.position = 'fixed';
         ta.style.opacity = '0';
+
         document.body.appendChild(ta);
+
         ta.select();
         document.execCommand('copy');
+
         document.body.removeChild(ta);
+
         showToast('✓ Passageiros copiados!');
       });
     });
   }
 
-  // ─── Observer para SPA ────────────────────────────────────────────────────
+  // ─── Observer SPA ─────────────────────────────────────────────────────────
   const observer = new MutationObserver(() => {
     if (isPaginaPassageiros()) {
       injectPanel();
     } else {
       removePanel();
     }
+
     const table = document.querySelector('.tbl-coupon-passengers');
+
     if (table) injectButton(table);
   });
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 
   injectPanel();
+
   const table = document.querySelector('.tbl-coupon-passengers');
+
   if (table) injectButton(table);
 
 })();
